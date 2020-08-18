@@ -1,0 +1,44 @@
+to do list:
+1. svm and with kernels (linear, poly, rbf, sigmoid, precomputed)
+https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html
+2. random forest (?with kernels)
+3. re-plot heatmap?
+4. report (finish intro, method, result, prepare first draft)
+
+import pandas as pd
+
+pro = pd.read_csv('Proteins_denoised.csv')
+cov = pd.read_csv(‘Covariates1.csv')
+
+
+
+X = pro
+y = cov['case']
+
+from sklearn.model_selection import train_test_split
+
+x_train,x_test,y_train,y_test=train_test_split(X,y,test_size=0.3,random_state=0)
+
+from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
+
+clf = svm.SVC(kernel='linear')
+clf.fit(x_train,y_train)
+y_pred = clf.predict(x_test)
+
+clf_poly = svm.SVC(kernel='poly')
+clf_poly.fit(x_train,y_train)
+y_pred = clf_poly.predict(x_test)
+
+clf_rbf = svm.SVC(kernel='rbf')
+clf_rbf.fit(x_train,y_train)
+y_pred = clf_rbf.predict(x_test)
+
+confusion_matrix = pd.crosstab(y_pred, y_test, rownames=['Actual'], colnames=[‘Predicted'])
+
+matrix = plot_confusion_matrix(clf, X_test, y_test,
+                                 cmap=plt.cm.Blues,
+                                 normalize='true')
+plt.title('Confusion matrix for our classifier')
+plt.show(matrix)
+plt.show()
